@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+    body{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    background-color: #f2f2f2;
+    padding: 20px;
+    font-size: 13px;
+    font-family:Tahoma, Geneva, sans-serif;
+}
+input[type=text], select {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+</style>
+</head>
+
+<body>
+<a href="./homepagetask5.html" style=" text-decoration: none; font-size:20px;">Home </a>
+<br><br>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<form>
+    <label>
+        <input type="text" name="movie" placeholder="movie/show id" />
+    </label>
+    <button>Go!</button>
+</form>
+<div id="container">
+    <h3 class="title"></h3>
+    <p class="plot"></p>
+    <p class="poster"></p>
+    <p class="year"></p>
+    <p class="imdb"></p>
+    <p class="rotten "></p>
+    <p class="actors"></p>
+    <p class="director"></p>
+    <p class="language"></p>
+    <p class="genre"></p>
+</div>
+<script>
+var $Form = $('form'), $Container = $('#container');
+$Container.hide();
+$Form.on('submit', function(p_oEvent){
+    var sUrl, sMovie, oData;
+    p_oEvent.preventDefault();
+sMovie = $Form.find('input').val();
+    sUrl = 'https://www.omdbapi.com/?i=' + sMovie + '&type=movie&tomatoes=true';
+    $.ajax(sUrl, {
+        complete: function(p_oXHR, p_sStatus){
+            oData = $.parseJSON(p_oXHR.responseText);
+            console.log(oData);
+            if(oData.Response=="False")
+                {
+                window.location.href = "./error.html";
+            }
+            $Container.find('.title').text(oData.Title);
+            $Container.find('.plot').text('Plot :'+oData.Plot);
+            if(oData.Poster=="N/A")
+            $Container.find('.poster').text('Poster Not Available')
+            else
+            $Container.find('.poster').html('<img src="' + oData.Poster + '" />');
+            $Container.find('.year').text('Year of release :'+oData.Year);
+            $Container.find('.imdb').text('IMDB Rating :'+ oData.imdbRating);
+            $Container.find('.rotten').text('Rotten Tomatoes Rating :'+oData.Metascore);
+            $Container.find('.actors').text('Actors :'+oData.Actors);
+            $Container.find('.director').text('Director :'+oData.Director);
+            $Container.find('.language').text('Language :'+oData.Language);
+            $Container.find('.genre').text('Genre :'+ oData.Genre);
+            $Container.show();
+        }
+    });    
+});
+</script>
+</body>
+</html>

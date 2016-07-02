@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+    body{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    background-color: #f2f2f2;
+    padding: 20px;
+    font-size: 13px;
+    font-family:Tahoma, Geneva, sans-serif;
+}
+input[type=text], select {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+</style>
+</head>
+
+<body>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<a href="./homepagetask5.html" style=" text-decoration: none; font-size:20px;">Home </a>
+<br><br>
+<form>
+    <label>
+        <input type="text" name="movie" placeholder="movie/show title" />
+        <input type="text" name="yr" placeholder="year" />
+    </label>
+    <button>Go!</button>
+</form>
+
+<div id="container">
+    <h3 class="title0"></h3>
+    <span class="year0"></span>
+    <p class="plot0"></p>
+    <span class="poster0"></span>
+    
+    
+    <h3 class="title1"></h3>
+    <span class="year1"></span>
+    <p class="plot1"></p>
+    <span class="poster1"></span>
+    
+    
+    <h3 class="title2"></h3>
+    <span class="year2"></span>
+    <p class="plot2"></p>
+    <span class="poster2"></span>
+    
+    
+    <h3 class="title3"></h3>
+    <span class="year3"></span>
+    <p class="plot3"></p>
+    <span class="poster3"></span>
+    
+    
+    <h3 class="title4"></h3>
+    <span class="year4"></span>
+    <p class="plot4"></p>
+    <span class="poster4"></span>
+    
+    
+    <h3 class="title5"></h3>
+    <span class="year5"></span>
+    <p class="plot5"></p>
+    <span class="poster5"></span>
+    
+    
+    <h3 class="title6"></h3>
+    <span class="year6"></span>
+    <p class="plot6"></p>
+    <span class="poster6"></span>
+    
+    
+    <h3 class="title7"></h3>
+    <span class="year7"></span>
+    <p class="plot7"></p>
+    <span class="poster7"></span>
+    
+    
+    <h3 class="title8"></h3>
+    <span class="year8"></span>
+    <p class="plot8"></p>
+    <span class="poster8"></span>
+    
+   
+    <h3 class="title9"></h3>
+    <span class="year9"></span>
+    <p class="plot9"></p>
+    <span class="poster9"></span>
+    
+    
+    
+</div>
+
+<script>
+var $Form = $('form'), $Container = $('#container');
+var originalState = $("#container").html();
+
+$Container.hide();
+$Form.on('submit', function(p_oEvent){
+	$("#container").html(originalState);
+    
+    var sUrl, sMovie, oData;
+    p_oEvent.preventDefault();
+    sMovie = $Form.find('input[name="movie"]').val();
+    y=$Form.find('input[name="yr"]').val();
+    sUrl = 'https://www.omdbapi.com/?s=' + sMovie + '&type=movie&tomatoes=true&y='+ y;
+    $.ajax(sUrl, {
+            
+            complete: function(p_oXHR, p_sStatus){
+            oData = $.parseJSON(p_oXHR.responseText);
+            console.log(p_oXHR.responseText);
+            console.log(oData.Response);
+            if(oData.Response=="False")
+            {
+                window.location.href = "./error.html";
+            }
+            $Container.find('.plot').text(oData.totalResults);
+	        //$Container.find('.plot').text(oData.totalResults);
+                
+            	$.each(oData.Search,function(key,value){
+            	   
+            	   //if(i==0) i=0;
+            	   console.log(key);
+            	   
+            	   	
+                   $Container.find('.title'+key).text(oData.Search[key]['Title']);
+                   if(oData.Search[key]['Poster']=="N/A")
+                     $Container.find('.poster'+key).text('Poster Not Available');
+                   else
+                   $Container.find('.poster'+key).html('<img src="' + oData.Search[key]['Poster'] + '" style="width:304px;height:228px;"/>');
+                   $Container.find('.year'+key).text('Year of release: '+oData.Search[key]['Year']); 
+                   
+
+                   
+                   	
+
+                   $Container.show();
+                   });
+                  // i=i+1;
+
+
+            	
+ 
+ 
+            
+ 		    //$Container.find('.plot').text(oData.Array[1]);
+            
+           
+            
+            
+        }
+    });    
+});
+</script>
+</body>
+</html>
+

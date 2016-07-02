@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+    input[type=text], select {
+    width: 14%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 20%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+
+body{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    background-color: #f2f2f2;
+    padding: 20px;
+    font-size: 13px;
+    font-family:Tahoma, Geneva, sans-serif;
+}
+</style>
+</head>
+
+<body>
+<a href="./homepagetask5.html" style=" text-decoration: none; font-size:20px;">Home </a>
+<br><br>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<form>
+    <label>
+        <input type="text" name="movie1" placeholder="movie/show" />
+        <input type="text" name="yr1" placeholder="year" />
+        
+        <select name="type1" id="type1">        
+                <option value="movie">movie</option>
+                <option value="series">series</option>
+                
+        </select>
+        
+        <br><br>
+        <input type="text" name="movie2" placeholder="movie/show" />
+        <input type="text" name="yr2" placeholder="year" />
+        
+        <select name="type2" id="type2">        
+                <option value="movie">movie</option>
+                <option value="series">series</option>
+                
+        </select>
+        
+        <br><br>
+
+    </label>
+    <button>Go!</button>
+</form>
+<div id="container">
+     <h3 class="title1"></h3>
+    
+    <p class="year1"></p>
+    <p class="imdb1"></p>
+    <p class="rotten1 "></p>
+    <p class="genre1"></p>
+    <p class="poster1"></p>
+     <h3 class="title2"></h3>
+    
+    <p class="year2"></p>
+    <p class="imdb2"></p>
+    <p class="rotten2 "></p>
+    <p class="genre2"></p>
+    <p class="poster2"></p>
+</div>
+<script>
+var $Form = $('form'), $Container = $('#container');
+$Container.hide();
+$Form.on('submit', function(p_oEvent){
+    var sUrl, sMovie, oData;
+    p_oEvent.preventDefault();
+
+    sMovie1 = $Form.find('input[name="movie1"]').val();
+    y1=$Form.find('input[name="yr1"]').val();
+    
+    typee1=$('select[name="type1"] option:selected').text();
+    
+    sMovie2 = $Form.find('input[name="movie2"]').val();
+    y2=$Form.find('input[name="yr2"]').val();
+    
+    typee2=$('select[name="type2"] option:selected').text();
+    
+  
+
+    sUrl1 = 'https://www.omdbapi.com/?t=' + sMovie1 + '&type='+typee1+'&tomatoes=true&y='+ y1 ;
+    sUrl2 = 'https://www.omdbapi.com/?t=' + sMovie2 + '&type='+typee2+'&tomatoes=true&y='+ y2 ;
+    $.ajax(sUrl1, {
+        complete: function(p_oXHR, p_sStatus){
+            oData1 = $.parseJSON(p_oXHR.responseText);
+            console.log(oData1);
+            if(oData1.Response=="False")
+                {
+                window.location.href = "./error.html";
+            }
+            $Container.find('.title1').text(oData1.Title);
+            if(oData1.Poster=="N/A")
+            $Container.find('.poster1').text('Poster Not Available')
+            else
+            $Container.find('.poster1').html('<img src="' + oData1.Poster + '" style="width:250px;height:180px;" />');
+            $Container.find('.year1').text('Year :'+oData1.Year);
+            $Container.find('.imdb1').text('IMDB Rating: '+oData1.imdbRating);
+            $Container.find('.rotten1').text('Rotten Tomatoes Rating :'+oData1.Metascore);
+            $Container.find('.genre1').text('Genre :'+oData1.Genre);
+            //$Container.show();
+        }
+    });  
+
+     $.ajax(sUrl2, {
+        complete: function(p_oXHR, p_sStatus){
+            oData2 = $.parseJSON(p_oXHR.responseText);
+            console.log(oData2);
+            if(oData2.Response=="False")
+                {
+                window.location.href = "./error.html";
+            }
+            $Container.find('.title2').text(oData2.Title);
+            $Container.find('.plot2').text(oData2.Plot);
+            if(oData2.Poster=="N/A")
+            $Container.find('.poster2').text('Poster Not Available')
+            else
+            $Container.find('.poster2').html('<img src="' + oData2.Poster + '" style="width:250px;height:180px;"/>');
+            $Container.find('.year2').text('Year :'+oData2.Year);
+            $Container.find('.imdb2').text('IMDB Rating: '+oData2.imdbRating);
+            $Container.find('.rotten2').text('Rotten Tomatoes Rating :'+oData2.Metascore);
+            $Container.find('.genre2').text('Genre :'+oData2.Genre);
+            $Container.show();
+        }
+    });   
+});
+</script>
+</body>
+</html>

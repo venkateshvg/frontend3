@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style type="text/css">
+	input[type=text], select {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 20%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+
+body{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    background-color: #f2f2f2;
+    padding: 20px;
+    font-size: 13px;
+    font-family:Tahoma, Geneva, sans-serif;
+}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<a href="./homepagetask5.html" style=" text-decoration: none; font-size:20px;">Home </a>
+<br><br>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+
+<form>
+    <label>
+        Movie:
+        <input type="text" name="movie" placeholder="movie/show title" />
+        <br>
+         Year: &nbsp;
+
+        <input type="text" name="yr" placeholder="year" />
+        <br>
+         Plot: &nbsp;&nbsp;
+        <select name="plot" id="plot">        
+                <option value="full">full</option>
+                <option value="short">short</option>
+                
+        </select>
+        <br>
+         Type:  &nbsp;
+        <select name="type" id="type">        
+                <option value="movie">movie</option>
+                <option value="series">series</option>
+                
+        </select>
+
+  
+
+    </label>
+    <button>Submit!</button>
+</form>
+<div id="container">
+    <h3 class="title"></h3>
+    <p class="plot"></p>
+    <p class="poster"></p>
+    <p class="year"></p>
+    <p class="imdb"></p>
+    <p class="rotten "></p>
+    <p class="actors"></p>
+    <p class="director"></p>
+    <p class="language"></p>
+    <p class="genre"></p>
+    
+</div>
+
+<script>
+var $Form = $('form'), $Container = $('#container');
+$Container.hide();
+$Form.on('submit', function(p_oEvent){
+    var sUrl, sMovie, oData;
+    p_oEvent.preventDefault();
+
+sMovie = $Form.find('input[name="movie"]').val();
+    y=$Form.find('input[name="yr"]').val();
+    plott=$('select[name="plot"] option:selected').text();
+    typee=$('select[name="type"] option:selected').text();
+    
+    console.log(plott);
+    
+    sUrl = 'https://www.omdbapi.com/?t=' + sMovie + '&type='+typee+'&tomatoes=true&y='+ y + '&plot=' + plott;
+   
+    $.ajax(sUrl, {
+        complete: function(p_oXHR, p_sStatus){
+            oData = $.parseJSON(p_oXHR.responseText);
+            console.log(oData.Response);
+            if(oData.Response=="False")
+            {
+            	window.location.href = "./error.html";
+            }
+            $Container.find('.title').text(oData.Title);
+            $Container.find('.plot').text('Plot :'+oData.Plot);
+            if(oData.Poster=="N/A")
+            $Container.find('.poster').text('Poster Not Available')
+            else
+            $Container.find('.poster').html('<img src="' + oData.Poster + '" />');
+            $Container.find('.year').text('Year of release :'+oData.Year);
+            $Container.find('.imdb').text('IMDB Rating :'+ oData.imdbRating);
+            $Container.find('.rotten').text('Rotten Tomatoes Rating :'+oData.Metascore);
+            $Container.find('.actors').text('Actors :'+oData.Actors);
+            $Container.find('.director').text('Director :'+oData.Director);
+            $Container.find('.language').text('Language :'+oData.Language);
+            $Container.find('.genre').text('Genre :'+ oData.Genre);
+            $Container.show();
+        }
+    });    
+});
+</script>
+
+</body>
+</html>
